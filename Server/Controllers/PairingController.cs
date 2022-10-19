@@ -28,7 +28,7 @@ namespace IXAge_IHM.Server.Controllers
         {
             var res = new List<PairingList>();
             // Make a reference to a directory.
-            DirectoryInfo di = new DirectoryInfo("./");
+            DirectoryInfo di = new DirectoryInfo("../");
 
             // Get a reference to each directory in that directory.
             DirectoryInfo[] diArr = di.GetDirectories();

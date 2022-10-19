@@ -194,7 +194,7 @@ namespace IXAge_IHM.Shared.Pairing
             }
         }
 
-        public string LabelFile { get => Name + "_" + _simu.Label + "_" + (FirstP ? "FirstPlayer" : "SecondPlayer")+".json"; }
+        public string LabelFile { get => "../" +  Name + "_" + _simu.Label + "_" + (FirstP ? "FirstPlayer" : "SecondPlayer")+".json"; }
 
         public class DecisionTree
         {
