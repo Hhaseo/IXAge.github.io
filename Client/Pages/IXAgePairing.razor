@@ -1,0 +1,285 @@
+﻿@page "/IXAgePairing"
+@using IXAge_IHM.Server.Controllers
+@using IXAge_IHM.Shared
+@using IXAge_IHM.Shared.Pairing
+@using Syncfusion.Blazor.Buttons
+@using System.Text.Json
+@using System.Net.Http
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.PivotView
+@inject HttpClient Http
+<h3>It's Pairing Time !</h3>
+<br/>
+<div id = "ControlRegion">
+    <div class="control-section">
+                    <div class="parent">
+                         <div class="child">
+                            <label>Select Tournament :</label>
+                        </div>
+                         <div class="child">
+                            <SfComboBox Width='400px' TValue="string" TItem="PairingList" PopupHeight="230px" Placeholder="Tournament" DataSource="@pairingLists">
+                                <ComboBoxEvents TValue="string" TItem="PairingList" ValueChange="SelectTournament"/>
+                                <ComboBoxFieldSettings Text="Label" Value="Label"/>
+                            </SfComboBox>
+                        </div>
+                        </div>
+                        @if (currentTournament != null)
+        {
+            <div class="parent">
+                <div class="child">
+                    <label>Select Ennemy Team :</label>
+                </div>
+                <div class="child">
+                    <SfComboBox Width='400px' TValue="string" TItem="PairingScenario" PopupHeight="230px" Placeholder="Ennemy Team" DataSource="@currentTournament.PairingSimulations">
+                        <ComboBoxEvents TValue="string" TItem="PairingScenario" ValueChange="SelectSimulation"/>
+                        <ComboBoxFieldSettings Text="Label" Value="Label"/>
+                    </SfComboBox>
+                </div>
+            </div>
+        }
+    </div>
+    @if (currentSimu != null) {
+        <IXAge_IHM.Client.Pages.Components.PairingEvaluations Evaluations=@Evaluations />
+        <div class="control-section">
+            <div>
+                <br />
+                <br />
+                <h2 style={a}>Simulation</h2>
+                <div class="parent">
+                    <div class="child">
+                        <SfButton IsPrimary="true" @onclick="RunSimulation">Run</SfButton>
+                    </div>
+                    <div class="child">
+                        <SfButton IsPrimary="true" @onclick="ResetSimulation">Reset</SfButton>
+                    </div>
+                    @if (simulation != null &&
+              (simulation.CurrentPhase == PairingPhase.PhaseOneWait ||
+               simulation.CurrentPhase == PairingPhase.PhaseTwoWait ||
+               simulation.CurrentPhase == PairingPhase.PhaseThreeWait))
+                    {
+                        <div class="child">
+                            <SfButton IsPrimary="true" @onclick="Next">Next</SfButton>
+                        </div>
+                    }
+                    @if (simulation != null && simulation.CurrentPhase == PairingPhase.End) {
+                        <div class="child">
+                            <b>Score @simulation.TotalP1 - @simulation.TotalP2</b>
+
+                        </div>
+                    }
+                </div>
+
+                <div class="parent">
+                    <div class="child pillowContainerLarge">
+                        <div class="example-content">
+                            Select Player One : 
+                            <SfComboBox TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P1" DataSource="@IAAvailable">
+                            </SfComboBox>
+                        </div>
+                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P1ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=true/>
+                    </div>
+                    <div class="child pillowContainerLarge">
+                        <div class="example-content">
+                            Select Player Two : 
+                            <SfComboBox TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P2" DataSource="@IAAvailable">
+                            </SfComboBox>
+                        </div>
+                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P2ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=false/>
+                    </div>
+                    <div class="child pillowContainerLarge">
+                        <div class="example-content">
+                            Summary : 
+                        </div>
+                        <div class="pillowContainerLarge basic">
+                            @foreach (var move in simulation.Moves)
+                            {
+                                @move
+                                <br />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<style>
+    .parent {
+    display: table;
+    flex-wrap: wrap;
+    margin: 5px 0 10px 0;
+    padding-bottom: 5px;
+    width: 100%;
+    }
+    .child {
+    width: fit-content;
+    margin: 0 5px 3px 5px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    vertical-align: middle;
+    }
+    .basic {
+    width: fit-content;
+    margin: 0 5px 3px 5px;
+    flex-wrap: nowrap;
+    vertical-align: middle;
+    }
+
+    h2 {
+    margin: auto;
+    }
+
+    .pillowContainerLarge {
+    background-color: white;
+    border-radius: 25px;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0px 0px 5px rgba(187, 187, 187, .5);
+    padding: 10px;
+    margin: 5px;
+    }
+
+    .pillowContainerSmall {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0px 0px 5px rgba(187, 187, 187, .5);
+    padding: 5px;
+    margin: 10px;
+    }
+
+</style>
+
+
+@code {
+    IEnumerable<PairingList> pairingLists { get; set; } = new List<PairingList>();
+    PairingList currentTournament { get; set; } = null;
+    PairingScenario currentSimu { get; set; } = null;
+
+    public List<string> IAAvailable { get; set; }
+    public string P1 { get; set; }
+    public string P2 { get; set; }
+
+    public PlayerChoice P1ChoiceAvailable { get;set; }
+    public PlayerChoice P2ChoiceAvailable { get;set; }
+
+    public List<TeamEvals> Evaluations { get; set; } = new List<TeamEvals>();
+
+    public PairingSimulation simulation { get; set; } = new PairingSimulation();
+    private void RunSimulation()
+    {
+        var p1 = IPairingSimulationPlayer.CreatePlayer(true, P1, currentSimu);
+        var p2 = IPairingSimulationPlayer.CreatePlayer(false, P2, currentSimu.Switch());
+        simulation.Set(currentSimu, p1, p2);
+
+    }
+
+    private void ResetSimulation()
+    {
+        //simulation.Set(currentSimu, IPairingSimulationPlayer.CreatePlayer(true, P1, currentSimu), IPairingSimulationPlayer.CreatePlayer(false, P2, currentSimu.Switch()));
+        simulation = new PairingSimulation();
+    }
+
+    public async void P1ChoiceCallback((bool, PlayerChoice) data)
+    {
+        if (data.Item1 && data.Item2?.Id != P1ChoiceAvailable?.Id)
+            P1ChoiceAvailable = data.Item2;
+        else if (!data.Item1 && data.Item2?.Id != P2ChoiceAvailable?.Id)
+            P2ChoiceAvailable = data.Item2;
+    }
+
+    private void Next()
+    {
+        simulation.NextStep(P1ChoiceAvailable?.Id ?? 0, P2ChoiceAvailable?.Id ?? 0, (0,0), (0,0));
+
+        P1ChoiceAvailable = null;
+        P2ChoiceAvailable = null;
+    }
+
+    public void SelectTournament(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, PairingList> args)
+    {
+        this.currentTournament = args.ItemData;
+    }
+
+    public void SelectSimulation(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, PairingScenario> args)
+    {
+        this.currentSimu = args.ItemData;
+        Evaluations = this.currentSimu.ToIHMList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //Versions = await Http.GetFromJsonAsync<IEnumerable<string>>("/IXAge/GetVersions") ?? new List<string>();
+            pairingLists = await Http.GetFromJsonAsync<IEnumerable<PairingList>>("/Pairing/List") ?? new List<PairingList>();
+            IAAvailable = IPairingSimulationPlayer.IAAvailable;
+            P1 = IPairingSimulationPlayer.DefaultP1;
+            P2 = IPairingSimulationPlayer.DefaultP2;
+        }
+        catch (Exception e)
+        {
+            
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        //changeData();
+        //Init = true;
+    }
+    //void ReverseTeam()
+    //{
+    //    //var stand = new List<string>(TeamLabel);
+    //    //TeamLabel.Clear();
+    //    //TeamLabel.AddRange(EnnemyLabel);
+    //    //EnnemyLabel.Clear();
+    //    //EnnemyLabel.AddRange(stand);
+
+    //    foreach (var eval in Evaluations)
+    //    {
+    //        var stand2 = eval.PlayerLab;
+    //        eval.PlayerLab = eval.EnnemyLab;
+    //        eval.EnnemyLab = stand2;
+    //        eval.Eval = 20 - eval.Eval;
+    //    }
+    //    StateHasChanged();
+    //}
+
+    //void changeData()
+    //{
+    //    //if (TeamLabel.Count > NbPlayer)
+    //    //{
+    //    //    TeamLabel.RemoveRange(NbPlayer.Value, TeamLabel.Count - NbPlayer.Value);
+    //    //    EnnemyLabel.RemoveRange(NbPlayer.Value, EnnemyLabel.Count - NbPlayer.Value);
+    //    //}
+    //    //var  l = TeamLabel.Count;
+    //    //while (l++ < NbPlayer)
+    //    //{
+    //    //    TeamLabel.Add("P" + l);
+    //    //    EnnemyLabel.Add("E" + l);
+    //    //}
+    //    Evaluations.RemoveAll(t => t.ToDelete(NbPlayer.Value));
+    //    for (int i = 0; i < NbPlayer;i++)
+    //    {
+    //        for (int j = 0; j < NbPlayer;j++)
+    //        {
+    //            if (!Evaluations.Any(t=> t.IsSame(i, j)))
+    //            {
+    //                Evaluations.Add(new TeamEvals(i, j, "P" + i, "E" + j)
+    //                    {
+    //                        Eval = Math.Max(Math.Min(10 + (i * 2) - (j * 2), 20), 0)
+    //                    });
+    //            }
+    //        }
+    //    }
+    //}
+    //void ValueChangeHandler(Syncfusion.Blazor.Inputs.ChangeEventArgs<int?> args)
+    //{
+    //    if (!args.Value.HasValue) return;
+    //    NbPlayer = args.Value;
+    //    changeData();
+    //}
+}

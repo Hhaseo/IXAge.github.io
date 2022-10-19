@@ -1,0 +1,71 @@
+﻿
+@using IXAge_IHM.Server.Controllers
+@using IXAge_IHM.Shared
+@using IXAge_IHM.Shared.Pairing
+@using Syncfusion.Blazor.Buttons
+@using System.Text.Json
+@using System.Net.Http
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.PivotView
+@inject HttpClient Http
+
+                <div class="parent">
+                <div class="child">
+                    
+                        @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseOneWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))
+                        {
+                            @if (!(FirstPlayer ?simulation.P1.Advice : simulation.P2.Advice))
+                            {
+                                  <div class="child pillowContainerSmall">
+                                     <b><i>IA Recommandation : @simulation.GetAdvice(FirstPlayer ? 1 : 2)</i></b>
+                                </div>
+                            }
+                            <div class="child pillowContainerSmall example-content">
+                                Phase 1 : Choose army to send : 
+                                <SfComboBox TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
+                                        @bind-Value="@ChoiceAvailable" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
+                                        <ComboBoxEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@ChangeValue"></ComboBoxEvents>
+                                    <ComboBoxFieldSettings Value="Label"></ComboBoxFieldSettings>
+                                </SfComboBox>
+                            </div>
+                        }
+                        @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseTwoWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))
+                        {
+                           <div class="child pillowContainerSmall">
+                                Phase  2
+                            </div>
+                        }
+                        @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseThreeWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))
+                        {
+                           <div class="child pillowContainerSmall">
+                                Phase 3 
+                            </div>
+                        }
+                        </div>
+                        </div>
+
+                        <div class="child pillowContainerLarge basic">
+                            @foreach (var move in ( FirstPlayer ? simulation.P1Moves : simulation.P2Moves))
+                            {
+                                @move
+                                <br />
+                            }
+                        </div>
+@code {
+
+    [Parameter]
+    public PairingSimulation simulation { get; set; } = new PairingSimulation();
+
+    [Parameter]
+    public PlayerChoice ChoiceAvailable{ get; set; } = null;
+    
+    public void ChangeValue(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
+    {
+           P1ChoiceCallback.InvokeAsync((FirstPlayer, ChoiceAvailable));
+    } 
+    [Parameter]
+    public bool FirstPlayer { get;set; }
+
+    [Parameter] public EventCallback<(bool, PlayerChoice)>  P1ChoiceCallback { get; set; }
+}
