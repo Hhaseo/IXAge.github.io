@@ -1,4 +1,4 @@
-namespace IXAge_IHM.Shared
+﻿namespace IXAge_IHM.Shared
 {
     public class WeatherForecast
     {

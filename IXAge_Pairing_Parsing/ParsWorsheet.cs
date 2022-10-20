@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static IXAge_IHM.Shared.Pairing.PairingScenario;
 
 namespace IXAge_Pairing_Parsing
 {
@@ -32,7 +33,7 @@ namespace IXAge_Pairing_Parsing
                         {
                             if (column != "")
                             {
-                                pairingSimu.Opponents.Add((column, "NoArmy"));
+                                pairingSimu.Opponents.Add( new EnnemyData() { Item1= column, Item2="NoArmy" } );
                                 Console.WriteLine("Ennemy Player = " + column);
                             }
                             else if (nbPlayer == 0 && columnId > 2)
@@ -45,7 +46,7 @@ namespace IXAge_Pairing_Parsing
                         {
                             if (column != "")
                             {
-                                pairingSimu.Opponents[columnId-2] = (pairingSimu.Opponents[columnId - 2].Item1, column);
+                                pairingSimu.Opponents[columnId-2] = new EnnemyData() { Item1 = pairingSimu.Opponents[columnId - 2].Item1, Item2 = column };
                                 Console.WriteLine("Ennemy Army = " + column);
                             }
                         }

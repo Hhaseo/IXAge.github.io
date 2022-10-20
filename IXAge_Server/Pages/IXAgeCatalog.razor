@@ -1,0 +1,49 @@
+﻿@page "/IXAgeCatalog"
+@using IXAge_IHM.Shared
+@using Syncfusion.Blazor.Buttons
+@using System.Text.Json
+@using System.Net.Http
+@using Syncfusion.Blazor.DropDowns
+@inject HttpClient Http
+<h3>IXAge Catalog</h3>
+<br/>
+<div id = "ControlRegion">
+    <div class="control-section">
+        <div class="col-lg-12 control-section">
+            <div class="control_wrapper">
+                <SfComboBox  TItem="string" TValue="string" PopupHeight="230px" Index=2 Autofill="true" @bind-Value="@SelectedVersion" Placeholder="Select a version" DataSource="@Versions">
+                <ComboBoxEvents TValue="string" TItem="string" ValueChange="ChangeVersion"></ComboBoxEvents>
+                </SfComboBox>
+                <SfComboBox  TItem="string" TValue="string" PopupHeight="230px" Index=2 Autofill="true" @bind-Value="@SelectedArmy"  Placeholder="Select an army" DataSource="@Armies">
+                   </SfComboBox>
+            </div>
+        </div>
+     </div>
+</div>
+
+@code {
+    public IEnumerable<string> Versions { get; set; } = new List<string>();
+    public IEnumerable<string> Armies { get; set; } = new List<string>();
+    public string SelectedVersion { get; set; } = "";
+    public string SelectedArmy { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Versions = await Http.GetFromJsonAsync<IEnumerable<string>>("/IXAge/GetVersions") ?? new List<string>();
+        Versions = await Http.GetFromJsonAsync<IEnumerable<string>>("/IXAge/GetVersions") ?? new List<string>();
+    }
+
+    public async void ChangeVersion(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, string> args)
+    {
+        if (args.Value != null && SelectedVersion != (args.Value ?? ""))
+        {
+            SelectedVersion = args.Value ?? "";
+        }
+            if (SelectedVersion != null && SelectedVersion != "")
+            {
+                Armies = await Http.GetFromJsonAsync<IEnumerable<string>>(@"/IXAge/GetArmies/"+SelectedVersion) ?? new List<string>();
+                if (!Armies.Contains(SelectedArmy))
+                    SelectedArmy = "";
+            }
+    }
+}

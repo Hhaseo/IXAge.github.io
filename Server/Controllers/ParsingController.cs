@@ -1,4 +1,4 @@
-using IXAge_IHM.Shared;
+﻿using IXAge_IHM.Shared;
 using IXAge_IHM.Shared.Parsing;
 using Microsoft.AspNetCore.Mvc;
 
