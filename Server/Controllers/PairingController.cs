@@ -27,8 +27,10 @@ namespace IXAge_IHM.Server.Controllers
         public IEnumerable<PairingList> List()
         {
             var res = new List<PairingList>();
+            string root = "wwwroot\\Files";
+
             // Make a reference to a directory.
-            DirectoryInfo di = new DirectoryInfo("../");
+            DirectoryInfo di = new DirectoryInfo(root);
 
             // Get a reference to each directory in that directory.
             DirectoryInfo[] diArr = di.GetDirectories();

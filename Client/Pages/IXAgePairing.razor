@@ -213,7 +213,7 @@
         try
         {
             //Versions = await Http.GetFromJsonAsync<IEnumerable<string>>("/IXAge/GetVersions") ?? new List<string>();
-            pairingLists = await Http.GetFromJsonAsync<IEnumerable<PairingList>>("/IXAge.github.io/Pairing/List") ?? new List<PairingList>();
+            pairingLists = await Http.GetFromJsonAsync<IEnumerable<PairingList>>("/Pairing/List") ?? new List<PairingList>();
             IAAvailable = IPairingSimulationPlayer.IAAvailable;
             P1 = IPairingSimulationPlayer.DefaultP1;
             P2 = IPairingSimulationPlayer.DefaultP2;
