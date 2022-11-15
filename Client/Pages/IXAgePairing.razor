@@ -1,4 +1,4 @@
-﻿@page "/IXAgePairing"
+﻿@page "/"
 @using IXAge_IHM.Server.Controllers
 @using IXAge_IHM.Shared
 @using IXAge_IHM.Shared.Pairing
@@ -18,10 +18,10 @@
                             <label>Select Tournament :</label>
                         </div>
                          <div class="child">
-                            <SfComboBox Width='400px' TValue="string" TItem="PairingList" PopupHeight="230px" Placeholder="Tournament" DataSource="@pairingLists">
-                                <ComboBoxEvents TValue="string" TItem="PairingList" ValueChange="SelectTournament"/>
-                                <ComboBoxFieldSettings Text="Label" Value="Label"/>
-                            </SfComboBox>
+                            <SfDropDownList Width='400px' TValue="string" TItem="PairingList" PopupHeight="230px" Placeholder="Tournament" DataSource="@pairingLists">
+                                <DropDownListEvents  TValue="string" TItem="PairingList" ValueChange="SelectTournament"/>
+                                <DropDownListFieldSettings  Text="Label" Value="Label"/>
+                            </SfDropDownList>
                         </div>
                         </div>
                         @if (currentTournament != null)
@@ -31,10 +31,10 @@
                     <label>Select Ennemy Team :</label>
                 </div>
                 <div class="child">
-                    <SfComboBox Width='400px' TValue="string" TItem="PairingScenario" PopupHeight="230px" Placeholder="Ennemy Team" DataSource="@currentTournament.PairingSimulations">
-                        <ComboBoxEvents TValue="string" TItem="PairingScenario" ValueChange="SelectSimulation"/>
-                        <ComboBoxFieldSettings Text="Label" Value="Label"/>
-                    </SfComboBox>
+                    <SfDropDownList Width='400px' TValue="string" TItem="PairingScenario" PopupHeight="230px" Placeholder="Ennemy Team" DataSource="@currentTournament.PairingSimulations">
+                        <DropDownListEvents  TValue="string" TItem="PairingScenario" ValueChange="SelectSimulation"/>
+                        <DropDownListFieldSettings  Text="Label" Value="Label"/>
+                    </SfDropDownList>
                 </div>
             </div>
         }
@@ -74,16 +74,16 @@
                     <div class="child pillowContainerLarge">
                         <div class="example-content">
                             Select Player One : 
-                            <SfComboBox TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P1" DataSource="@IAAvailable">
-                            </SfComboBox>
+                            <SfDropDownList   TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P1" DataSource="@IAAvailable">
+                            </SfDropDownList>
                         </div>
                         <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P1ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=true/>
                     </div>
                     <div class="child pillowContainerLarge">
                         <div class="example-content">
                             Select Player Two : 
-                            <SfComboBox TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P2" DataSource="@IAAvailable">
-                            </SfComboBox>
+                            <SfDropDownList TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P2" DataSource="@IAAvailable">
+                            </SfDropDownList>
                         </div>
                         <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P2ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=false/>
                     </div>

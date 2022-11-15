@@ -42,7 +42,7 @@ namespace IXAge_IHM.Shared.Pairing
         public override string ToString()
         {
             if (Team == null || Opponents == null) return String.Empty;
-            string res = "\n----------\n\t\t" + String.Join("\t", Opponents);
+            string res = "\n----------\n\t\t\t" + String.Join("\t", Opponents.Select(t => t.Item1));
             foreach (var player in Team)
             {
                 res += "\n" + (player.Name ?? "P") + "\t" + String.Join("\t", player.Evals ?? new List<int>() { });

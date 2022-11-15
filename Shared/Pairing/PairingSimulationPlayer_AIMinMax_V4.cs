@@ -31,9 +31,9 @@ namespace IXAge_IHM.Shared.Pairing
         {
             FirstP = firstP;
             _simu = simu;
-
-            BuildTree.RunTest(simu);
-            Data = BuildTree.DataString;
+            var treeBuilder = new BuildTree();
+            treeBuilder.RunTest(simu);
+            Data = treeBuilder.DataString;
 
 
             //_tree = new Tree_V2();
@@ -89,11 +89,11 @@ namespace IXAge_IHM.Shared.Pairing
         {
             int maxV = 0;
             (int, int) maxI = (0, 0);
-            for (int i2 = 0; i2< 6; i2++)
+            for (int i2 = 0; i2 < 6; i2++)
             {
                 if (!fight.Any(t => t.Item1 == i2) && i != i2)
                 {
-                    for (int i3 = 0; i3< 6; i3++)
+                    for (int i3 = 0; i3 < 6; i3++)
                     {
 
                         if (!fight.Any(t => t.Item1 == i3) && i != i3 && i3 != i2)
@@ -101,16 +101,16 @@ namespace IXAge_IHM.Shared.Pairing
                             var standV = 2000;
 
                             // max 
-                            for (int j2 = 0; j2< 6; j2++)
+                            for (int j2 = 0; j2 < 6; j2++)
                             {
                                 if (!fight.Any(t => t.Item2 == j2) && j != j2)
                                 {
-                                    for (int j3 = 0; j3< 6; j3++)
+                                    for (int j3 = 0; j3 < 6; j3++)
                                     {
                                         if (!fight.Any(t => t.Item2 == j3) && j != j3 && j3 != j2)
                                         {
                                             var thisFight = TakeResponse(fight, i, j, i2, i3, j2, j3);
-                                             // min
+                                            // min
                                             if (thisFight.Item2 < standV)
                                             {
                                                 standV = thisFight.Item2;
@@ -138,29 +138,29 @@ namespace IXAge_IHM.Shared.Pairing
             if (fight.Count == 2) // notre acceptation entrainera la fin de la partie.
             {
                 int lastI = 0;
-                while (lastI == fight[0].Item1 || lastI==i || lastI==i2|| lastI==fight[1].Item1 || lastI == i3)
+                while (lastI == fight[0].Item1 || lastI == i || lastI == i2 || lastI == fight[1].Item1 || lastI == i3)
                     lastI++;
 
                 int lastJ = 0;
-                while (lastJ == fight[0].Item2 || lastJ==j||lastJ==j2||lastJ==fight[1].Item2 || lastJ == j3)
+                while (lastJ == fight[0].Item2 || lastJ == j || lastJ == j2 || lastJ == fight[1].Item2 || lastJ == j3)
                     lastJ++;
 
-                ulong cFight = (ulong)fight[0].Item1 * 100000000000 +(ulong)fight[0].Item2 * 10000000000 +
+                ulong cFight = (ulong)fight[0].Item1 * 100000000000 + (ulong)fight[0].Item2 * 10000000000 +
                     (ulong)fight[1].Item1 * 1000000000 + (ulong)fight[1].Item2 * 100000000;
                 // choix estimé ennemi
 
 
                 // mon choix
-                ulong cfight2 = cFight+ (ulong)i * 10000000 + (ulong)j2 * 1000000 + (ulong)lastI* 1000 + (ulong)j3 * 100;
+                ulong cfight2 = cFight + (ulong)i * 10000000 + (ulong)j2 * 1000000 + (ulong)lastI * 1000 + (ulong)j3 * 100;
 
-                var cfight2_2 = BuildTree.DataString[cfight2 + (ulong)i2 * 100000 + (ulong)j * 10000 + (ulong)i3* 10 + (ulong)lastJ * 1];
-                var cfight2_3 = BuildTree.DataString[cfight2 + (ulong)i3 * 100000 + (ulong)j * 10000 + (ulong)i2* 10 + (ulong)lastJ * 1];
+                var cfight2_2 = Data[cfight2 + (ulong)i2 * 100000 + (ulong)j * 10000 + (ulong)i3 * 10 + (ulong)lastJ * 1];
+                var cfight2_3 = Data[cfight2 + (ulong)i3 * 100000 + (ulong)j * 10000 + (ulong)i2 * 10 + (ulong)lastJ * 1];
                 //choix ennemi
                 var min1 = cfight2_2 > cfight2_3 ? cfight2_3 : cfight2_2;
 
-                ulong cfight3 = cFight+ (ulong)i * 10000000 + (ulong)j3 * 1000000 + (ulong)lastI* 1000 + (ulong)j2 * 100;
-                var cfight3_2 = BuildTree.DataString[cfight3 + (ulong)i2 * 100000 + (ulong)j * 10000 + (ulong)i3* 10 + (ulong)lastJ * 1];
-                var cfight3_3 = BuildTree.DataString[cfight3 + (ulong)i3 * 100000 + (ulong)j * 10000 + (ulong)i2* 10 + (ulong)lastJ * 1];
+                ulong cfight3 = cFight + (ulong)i * 10000000 + (ulong)j3 * 1000000 + (ulong)lastI * 1000 + (ulong)j2 * 100;
+                var cfight3_2 = Data[cfight3 + (ulong)i2 * 100000 + (ulong)j * 10000 + (ulong)i3 * 10 + (ulong)lastJ * 1];
+                var cfight3_3 = Data[cfight3 + (ulong)i3 * 100000 + (ulong)j * 10000 + (ulong)i2 * 10 + (ulong)lastJ * 1];
                 //choix ennemi
                 var min2 = cfight3_2 > cfight3_3 ? cfight3_3 : cfight3_2;
 
@@ -194,7 +194,7 @@ namespace IXAge_IHM.Shared.Pairing
             }
         }
 
-        public string LabelFile { get => "../" +  Name + "_" + _simu.Label + "_" + (FirstP ? "FirstPlayer" : "SecondPlayer")+".json"; }
+        public string LabelFile { get => Name + "_" + _simu.Label + "_" + (FirstP ? "FirstPlayer" : "SecondPlayer") + ".json"; }
 
         public class DecisionTree
         {
@@ -220,11 +220,11 @@ namespace IXAge_IHM.Shared.Pairing
                 List<int> rest1 = new List<int>();
                 List<int> rest2 = new List<int>();
                 _computed.fight = fights;
-                var  c = ChooseOne_flat(null, null, null);
+                var c = ChooseOne_flat(null, null, null);
                 tree.Decision1[CountFlight()] = c;
                 for (int i = 0; i < 6; i++)
                 {
-                    for (int j = 0; j < 6;j++)
+                    for (int j = 0; j < 6; j++)
                     {
                         _computed.fight = fights;
                         var response = ChooseResponse_flat(i, "", j, "", null, null, null);
@@ -243,7 +243,7 @@ namespace IXAge_IHM.Shared.Pairing
                                             if (j5 != j && j6 != j && j5 != j6)
                                             {
 
-                                                var response2 = AcceptResponse_flat(j, null, (i5, i6), ("",""), i, null, (j5, j6), ("", ""), null, null);
+                                                var response2 = AcceptResponse_flat(j, null, (i5, i6), ("", ""), i, null, (j5, j6), ("", ""), null, null);
                                                 tree.Decision3[CountFlight(i, j, (i5, i6), (j5, j6))] = response2;
 
 
@@ -330,7 +330,7 @@ namespace IXAge_IHM.Shared.Pairing
             int i = 5;
             foreach (var data in _computed.fight)
             {
-                f += ((ulong)Math.Pow(10, i*2+1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i*2) * (ulong)data.Item2);
+                f += ((ulong)Math.Pow(10, i * 2 + 1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i * 2) * (ulong)data.Item2);
                 i--;
             }
             return f;
@@ -341,11 +341,11 @@ namespace IXAge_IHM.Shared.Pairing
             int i = 5;
             foreach (var data in _computed.fight)
             {
-                f += ((ulong)Math.Pow(10, i*2+1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i*2) * (ulong)data.Item2);
+                f += ((ulong)Math.Pow(10, i * 2 + 1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i * 2) * (ulong)data.Item2);
                 i--;
             }
-            f += ((ulong)Math.Pow(10, i*2+1) * (ulong)myChoice);
-            f += ((ulong)Math.Pow(10, (i-1)*2) * (ulong)ennemy);
+            f += ((ulong)Math.Pow(10, i * 2 + 1) * (ulong)myChoice);
+            f += ((ulong)Math.Pow(10, (i - 1) * 2) * (ulong)ennemy);
 
             return f;
         }
@@ -355,17 +355,17 @@ namespace IXAge_IHM.Shared.Pairing
             int i = 5;
             foreach (var data in _computed.fight)
             {
-                f += ((ulong)Math.Pow(10, i*2+1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i*2) * (ulong)data.Item2);
+                f += ((ulong)Math.Pow(10, i * 2 + 1) * (ulong)data.Item1 + (ulong)Math.Pow(10, i * 2) * (ulong)data.Item2);
                 i--;
             }
-            f += ((ulong)Math.Pow(10, i*2+1) * (ulong)myChoice);
+            f += ((ulong)Math.Pow(10, i * 2 + 1) * (ulong)myChoice);
 
-            f += ((ulong)Math.Pow(10, i*2) * (ulong)ennemyPossibility.Item1);
-            f += ((ulong)Math.Pow(10, (i-1)*2+1) * (ulong)possibility.Item1);
+            f += ((ulong)Math.Pow(10, i * 2) * (ulong)ennemyPossibility.Item1);
+            f += ((ulong)Math.Pow(10, (i - 1) * 2 + 1) * (ulong)possibility.Item1);
 
-            f += ((ulong)Math.Pow(10, (i-1)*2) * (ulong)ennemy);
-            f += ((ulong)Math.Pow(10, (i-2)*2) * (ulong)ennemyPossibility.Item2);
-            f += ((ulong)Math.Pow(10, (i-2)*2+1) * (ulong)possibility.Item2);
+            f += ((ulong)Math.Pow(10, (i - 1) * 2) * (ulong)ennemy);
+            f += ((ulong)Math.Pow(10, (i - 2) * 2) * (ulong)ennemyPossibility.Item2);
+            f += ((ulong)Math.Pow(10, (i - 2) * 2 + 1) * (ulong)possibility.Item2);
             return f;
         }
 
@@ -405,7 +405,7 @@ namespace IXAge_IHM.Shared.Pairing
                 CreateDecisionTree();
             }
             var stand = tree.Decision2[CountFlight(myChoice, ennemy)];
-            return (((int)(stand/10)), (stand %10));
+            return (((int)(stand / 10)), (stand % 10));
         }
 
         public int AcceptResponse(int ennemy, string ennemyLabel, (int, int) ennemyPossibility, (string, string) ennemyPossibilityLabel,
@@ -415,7 +415,7 @@ namespace IXAge_IHM.Shared.Pairing
             {
                 CreateDecisionTree();
             }
-            return tree.Decision3[CountFlight(you, ennemy,  ennemyPossibility, possibility)];
+            return tree.Decision3[CountFlight(you, ennemy, ennemyPossibility, possibility)];
         }
 
         public void FightValidate(int my, int other)
