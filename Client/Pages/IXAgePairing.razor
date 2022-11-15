@@ -77,7 +77,12 @@
                             <SfDropDownList   TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P1" DataSource="@IAAvailable">
                             </SfDropDownList>
                         </div>
-                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P1ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=true/>
+                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P1ChoiceAvailable 
+                        ChoiceCallback=@ChoiceCallback
+                        Response1Callback=@Response1Callback
+                        Response2Callback=@Response2Callback
+                        ValidationCallback=@ValidationCallback
+                        FirstPlayer=true/>
                     </div>
                     <div class="child pillowContainerLarge">
                         <div class="example-content">
@@ -85,7 +90,12 @@
                             <SfDropDownList TValue="string" TItem="string" PopupHeight="230px" Width="200px" Placeholder="Choose P1" @bind-Value="@P2" DataSource="@IAAvailable">
                             </SfDropDownList>
                         </div>
-                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P2ChoiceAvailable P1ChoiceCallback=@P1ChoiceCallback FirstPlayer=false/>
+                        <IXAge_IHM.Client.Pages.Components.PairingPlayer simulation=@simulation ChoiceAvailable=@P2ChoiceAvailable 
+                        ChoiceCallback=@ChoiceCallback
+                        Response1Callback=@Response1Callback
+                        Response2Callback=@Response2Callback
+                        ValidationCallback=@ValidationCallback
+                        FirstPlayer=false/>
                     </div>
                     <div class="child pillowContainerLarge">
                         <div class="example-content">
@@ -164,6 +174,19 @@
     public PlayerChoice P1ChoiceAvailable { get;set; }
     public PlayerChoice P2ChoiceAvailable { get;set; }
 
+    
+    
+    public PlayerChoice P1Response1 { get;set; }
+    public PlayerChoice P1Response2 { get;set; }
+    public PlayerChoice P2Response1 { get;set; }
+    public PlayerChoice P2Response2 { get;set; }
+
+    
+
+    public PlayerChoice P1Validation { get;set; }
+    public PlayerChoice P2Validation { get;set; }
+
+
     public List<TeamEvals> Evaluations { get; set; } = new List<TeamEvals>();
 
     public PairingSimulation simulation { get; set; } = new PairingSimulation();
@@ -180,8 +203,33 @@
         //simulation.Set(currentSimu, IPairingSimulationPlayer.CreatePlayer(true, P1, currentSimu), IPairingSimulationPlayer.CreatePlayer(false, P2, currentSimu.Switch()));
         simulation = new PairingSimulation();
     }
+    
+    public async void ValidationCallback((bool, PlayerChoice) data)
+    {
+        if (data.Item1 && data.Item2?.Id != P1Validation?.Id)
+            P1Validation = data.Item2;
+        else if (!data.Item1 && data.Item2?.Id != P2Validation?.Id)
+            P2Validation = data.Item2;
+    }
+    
+    
+    public async void Response1Callback((bool, PlayerChoice) data)
+    {
+        if (data.Item1 && data.Item2?.Id != P1Response1?.Id)
+            P1Response1 = data.Item2;
+        else if (!data.Item1 && data.Item2?.Id != P2Response1?.Id)
+            P2Response1 = data.Item2;
+    }
+    
+    public async void Response2Callback((bool, PlayerChoice) data)
+    {
+        if (data.Item1 && data.Item2?.Id != P1Response2?.Id)
+            P1Response2 = data.Item2;
+        else if (!data.Item1 && data.Item2?.Id != P2Response2?.Id)
+            P2Response2 = data.Item2;
+    }
 
-    public async void P1ChoiceCallback((bool, PlayerChoice) data)
+    public async void ChoiceCallback((bool, PlayerChoice) data)
     {
         if (data.Item1 && data.Item2?.Id != P1ChoiceAvailable?.Id)
             P1ChoiceAvailable = data.Item2;
@@ -191,10 +239,18 @@
 
     private void Next()
     {
-        simulation.NextStep(P1ChoiceAvailable?.Id ?? 0, P2ChoiceAvailable?.Id ?? 0, (0,0), (0,0));
-
+        simulation.NextStep(P1ChoiceAvailable?.Id ?? 0, P2ChoiceAvailable?.Id ?? 0,
+            (P1Response1?.Id ?? 0, P1Response2?.Id ?? 0), 
+             (P2Response1?.Id ?? 0, P2Response2?.Id ?? 0),
+        P1Validation?.Id ?? 0, P2Validation?.Id ?? 0);
+        
         P1ChoiceAvailable = null;
-        P2ChoiceAvailable = null;
+        P1Response1 = null;
+        P1Response2 = null;
+        P2Response1 = null;
+        P2Response2 = null;
+        P1Validation = null;
+        P2Validation = null;
     }
 
     public void SelectTournament(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, PairingList> args)

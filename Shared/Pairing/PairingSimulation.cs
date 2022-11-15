@@ -61,7 +61,7 @@ namespace IXAge_IHM.Shared.Pairing
 
         }
 
-        public void NextStep(int p1, int p2, (int, int) p1Resp, (int, int) p2Resp)
+        public void NextStep(int p1, int p2, (int, int) p1Resp, (int, int) p2Resp, int v1, int v2)
         {
             if (!P1.AutoChoice)
                 p1Choice = p1;
@@ -71,6 +71,10 @@ namespace IXAge_IHM.Shared.Pairing
                 p1Response = p1Resp;
             if (!P2.AutoChoice)
                 p2Response = p2Resp;
+            if (!P1.AutoChoice)
+                p1ResponseChoice = v1;
+            if (!P2.AutoChoice)
+                p2ResponsereChoice = v2;
             switch (CurrentPhase)
             {
                 case PairingPhase.PhaseOne: 

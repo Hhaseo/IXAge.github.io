@@ -25,7 +25,7 @@
                                 Phase 1 : Choose army to send : 
                                 <SfDropDownList TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
                                         @bind-Value="@ChoiceAvailable" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
-                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@ChangeValue"></DropDownListEvents>
+                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@MakeChoice"></DropDownListEvents>
                                     <DropDownListFieldSettings  Value="Label"></DropDownListFieldSettings>
                                 </SfDropDownList>
                             </div>
@@ -33,13 +33,28 @@
                         @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseTwoWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))
                         {
                            <div class="child pillowContainerSmall">
-                                Phase  2
+                               Ennemy send : @(Response1 != null ? Response1.Id : "") , choose your response :
+                                <SfDropDownList TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
+                                        @bind-Value="@Response1" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
+                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@MakeResponse1"></DropDownListEvents>
+                                    <DropDownListFieldSettings  Value="Label"></DropDownListFieldSettings>
+                                </SfDropDownList>
+                                <SfDropDownList TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
+                                        @bind-Value="@Response2" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
+                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@MakeResponse2"></DropDownListEvents>
+                                    <DropDownListFieldSettings  Value="Label"></DropDownListFieldSettings>
+                                </SfDropDownList>
                             </div>
                         }
                         @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseThreeWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))
                         {
                            <div class="child pillowContainerSmall">
-                                Phase 3 
+                               response to : @(Response1 != null ? Response1.Id : "") are @(Response1 != null ? Response1.Id : "")  and @(Response1 != null ? Response1.Id : "")  , choose your opponent :
+                                <SfDropDownList TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
+                                        @bind-Value="@Validation" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
+                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@MakeValidation"></DropDownListEvents>
+                                    <DropDownListFieldSettings  Value="Label"></DropDownListFieldSettings>
+                                </SfDropDownList>
                             </div>
                         }
                         </div>
@@ -56,16 +71,46 @@
 
     [Parameter]
     public PairingSimulation simulation { get; set; } = new PairingSimulation();
-
+    
     [Parameter]
     public PlayerChoice ChoiceAvailable{ get; set; } = null;
     
-    public void ChangeValue(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
+    [Parameter]
+    public PlayerChoice Response1{ get; set; } = null;
+    
+    [Parameter]
+    public PlayerChoice Response2{ get; set; } = null;
+    
+    [Parameter]
+    public PlayerChoice Validation{ get; set; } = null;
+
+    
+    public void MakeChoice(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
     {
-           P1ChoiceCallback.InvokeAsync((FirstPlayer, ChoiceAvailable));
+           ChoiceCallback.InvokeAsync((FirstPlayer, ChoiceAvailable));
     } 
+    
+    public void MakeResponse1(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
+    {
+           Response1Callback.InvokeAsync((FirstPlayer, Response1));
+    } 
+    
+    public void MakeResponse2(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
+    {
+           Response2Callback.InvokeAsync((FirstPlayer, Response2));
+    } 
+    
+    public void MakeValidation(ChangeEventArgs<PlayerChoice, PlayerChoice> args)
+    {
+           ValidationCallback.InvokeAsync((FirstPlayer, Validation));
+    } 
+
+
     [Parameter]
     public bool FirstPlayer { get;set; }
-
-    [Parameter] public EventCallback<(bool, PlayerChoice)>  P1ChoiceCallback { get; set; }
+    
+    [Parameter] public EventCallback<(bool, PlayerChoice)>  ChoiceCallback { get; set; }
+    [Parameter] public EventCallback<(bool, PlayerChoice)>  Response1Callback { get; set; }
+    [Parameter] public EventCallback<(bool, PlayerChoice)>  Response2Callback { get; set; }
+    [Parameter] public EventCallback<(bool, PlayerChoice)>  ValidationCallback { get; set; }
 }
