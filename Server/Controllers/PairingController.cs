@@ -38,7 +38,7 @@ namespace IXAge_IHM.Server.Controllers
             // Display the names of the directories.
             foreach (DirectoryInfo dri in diArr)
             {
-                res.Add(new PairingList() { Label = dri.Name });
+                //res.Add(new PairingList() { Label = dri.Name });
                 if (dri.Name.Count() > 5 && dri.Name.Substring(0, 5) == "Data_")
                 {
                     var teams = Directory.GetFiles(dri.FullName).Where(

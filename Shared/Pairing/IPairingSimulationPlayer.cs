@@ -3,7 +3,7 @@
     public interface IPairingSimulationPlayer
     {
         string Name { get; }
-        public static List<string> IAAvailable => new List<string>() { "Human", "Human (IA v1 Guided)", "Human (IA v2 Guided)", "IA v1", "IA v2" };
+        public static List<string> IAAvailable => new List<string>() { "Human", "Human (IA Guided)", "IA" };
 
         public static string DefaultP1 = "Human (IA v2 Guided)";
 
@@ -16,8 +16,10 @@
                 case "Human": return new PairingSimulationPlayer_Human();
                 case "Human (IA v1 Guided)": return new PairingSimulationPlayer_Human_IAGuided(new PairingSimulationPlayer_AIMax(simu));
                 case "Human (IA v2 Guided)": return new PairingSimulationPlayer_Human_IAGuided(new PairingSimulationPlayer_AIMinMax_V3(firstP, simu));
+                case "Human (IA Guided)": return new PairingSimulationPlayer_Human_IAGuided(new PairingSimulationPlayer_AIMinMax_V4(firstP, simu));
                 case "IA v1": return new PairingSimulationPlayer_AIMax(simu);
                 case "IA v2": return new PairingSimulationPlayer_AIMinMax_V3(firstP, simu);
+                case "IA": return new PairingSimulationPlayer_AIMinMax_V4(firstP, simu);
             }
             return null;
         }

@@ -23,11 +23,11 @@
                             }
                             <div class="child pillowContainerSmall example-content">
                                 Phase 1 : Choose army to send : 
-                                <SfComboBox TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
+                                <SfDropDownList TValue="PlayerChoice" TItem="PlayerChoice" PopupHeight="230px" Width="200px" Placeholder=@(FirstPlayer ? "Choose P1" : "Choose P2") 
                                         @bind-Value="@ChoiceAvailable" DataSource=@(FirstPlayer ? simulation.P1ChoiceAvailable : simulation.P2ChoiceAvailable)>
-                                        <ComboBoxEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@ChangeValue"></ComboBoxEvents>
-                                    <ComboBoxFieldSettings Value="Label"></ComboBoxFieldSettings>
-                                </SfComboBox>
+                                        <DropDownListEvents TItem="PlayerChoice" TValue="PlayerChoice" ValueChange="@ChangeValue"></DropDownListEvents>
+                                    <DropDownListFieldSettings  Value="Label"></DropDownListFieldSettings>
+                                </SfDropDownList>
                             </div>
                         }
                         @if (simulation != null && simulation.CurrentPhase == PairingPhase.PhaseTwoWait && !(FirstPlayer ?simulation.P1.AutoChoice : simulation.P2.AutoChoice))

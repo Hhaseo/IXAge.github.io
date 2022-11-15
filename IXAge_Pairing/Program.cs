@@ -3,9 +3,9 @@ using IXAge_IHM.Shared.Pairing;
 using IXAge_Pairing;
 using Newtonsoft.Json;
 
-bool tournament = true;
+bool tournament = false;
 //"data.json", "Data_Desquiloutz & co.json", 
-foreach (var fileName in new List<string>() { "Data_Héro'vergnats.json", "Data_Mercos.json", "Data_Ok let's go.json", "Data_TUC.json" }) {
+foreach (var fileName in new List<string>() { "Data_Data_IR_2022/Data_Pays Loire 2.json" }) {
     Console.WriteLine("Current File = "+fileName);
     string text = File.ReadAllText(fileName);
     var elems = JsonConvert.DeserializeObject<PairingScenario>(text);
@@ -118,7 +118,7 @@ foreach (var fileName in new List<string>() { "Data_Héro'vergnats.json", "Data_
             //Console.WriteLine("----- Team 2  : ");
             //Console.WriteLine(elems?.Switch().ToString());
 
-            BuildTree.RunTest(elems);
+            new BuildTree().RunTest(elems);
 
             var data = TreeNode.Build(elems);
             Console.WriteLine("Max : "+data.BestValue);
