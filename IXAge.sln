@@ -15,10 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IXAge_Pairing", "IXAge_Pair
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IXAge_Pairing_Parsing", "IXAge_Pairing_Parsing\IXAge_Pairing_Parsing.csproj", "{97A2C689-0682-42EA-AD50-0697CA3F2653}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IXAge_Server", "IXAge_Server\IXAge_Server.csproj", "{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,22 +71,6 @@ Global
 		{97A2C689-0682-42EA-AD50-0697CA3F2653}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97A2C689-0682-42EA-AD50-0697CA3F2653}.Release|x64.ActiveCfg = Release|Any CPU
 		{97A2C689-0682-42EA-AD50-0697CA3F2653}.Release|x64.Build.0 = Release|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Debug|x64.Build.0 = Debug|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Release|x64.ActiveCfg = Release|Any CPU
-		{5EC4B402-F6D3-4A41-B46F-AE72B02CEC19}.Release|x64.Build.0 = Release|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Debug|x64.Build.0 = Debug|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Release|x64.ActiveCfg = Release|Any CPU
-		{4D70AAC3-1B56-4CBE-B4CF-DE72200719EB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
